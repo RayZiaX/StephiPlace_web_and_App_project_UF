@@ -1,0 +1,9 @@
+.form{
+    margin: 0 35%;
+    justify-content: center;
+}
+
+label{
+    display: block;
+    float: left;
+}

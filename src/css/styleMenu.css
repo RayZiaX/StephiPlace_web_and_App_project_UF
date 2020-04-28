@@ -1,0 +1,101 @@
+header{
+    margin: 0 15%;
+    background-color: transparent;
+}
+header div.contenu-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.contenu-header .contenu,
+.contenu-header .contenu-btn {
+    display: flex;
+}
+
+.contenu {
+    display: flex;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.contenu-menu {
+    display: flex;
+    justify-content: center;
+}
+
+.body {
+    display: flex;
+    width: 90%;
+    flex-direction: column;
+}
+
+.contenu-menu ul li {
+    float: right;
+    margin-left: 20px;
+    padding-top: 20px;
+}
+
+ul li a {
+    display: block;
+    float: left;
+    background-color: transparent;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px;
+    width: 200px;
+    height: 20px;
+    font-size: 1.25rem;   
+    z-index: 1;
+    border-radius: none;
+    border-radius: 10px;
+    transition: all 500ms;
+}
+ul li a:hover{
+    background-color: #CE117B;
+    color: white;
+    z-index: 2;
+    
+}
+
+.contenu-btn-menu {
+    justify-content: flex-end;
+    height: 50px;
+    
+}
+.contenu-btn-menu div a{
+    display: block;
+    margin-right: 10px;
+    background-color: #CE117B;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    width: 150px;
+    font-size: 1.25rem;
+    border-radius: 10px;
+    transition: background-color 500ms, color 500ms;
+}
+
+.contenu-btn-menu div a:hover{
+    background-color: transparent;
+    color: #CE117B;
+}
+
+.btn-profil{
+    display: flex !important;
+    width: 205px !important;
+    background-color: #CE117B;
+    text-align: center !important;
+}
+.img-profil{
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+}

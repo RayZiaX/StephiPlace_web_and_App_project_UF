@@ -1,0 +1,38 @@
+.btn{
+    display: block;
+    background-color: #CE117B;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.25rem;
+    border-radius: 10px;
+    border: none;
+    transition: all 500ms;
+    box-shadow: none;
+}
+.btn-hover:hover{
+    cursor: pointer;
+    box-shadow: 1px 1px 10px #000;
+}
+.input{
+    width: 200px;
+    height: 30px;
+    font-size: 1.10rem;
+}
+.label{
+    font-size: 1.10rem;
+}
+.select{
+    width: 210px;
+    height: 30px;
+    color: #CE117B;
+    font-size: 1.10rem;
+    text-align: center;
+    background-color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+   -moz-appearance: none;
+   cursor: pointer;
+}

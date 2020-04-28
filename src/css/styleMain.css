@@ -1,0 +1,102 @@
+html {
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 1;
+}
+
+body {
+    height: 100vh;
+    /* width: 100vw; */
+    background-color: rgb(241, 241, 241);
+    margin: 0;
+}
+/* debut body */
+div.formulaire{
+    display: block;
+    box-sizing: content-box;
+    margin: 5% 25%;
+    margin-top: 15%;
+    padding: 10px;
+    text-align: center;
+    background-color: transparent;
+}
+form{
+    align-self: center;
+}
+div.entrer > input{
+    margin-right: 10px;
+}
+div.type{
+        display: flex;
+        justify-content: flex-start;
+        flex: 1 1 20%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 0;
+}
+div.type select{
+    margin-left: 10px;
+}
+.formulaire-accueil{
+    display: flex;
+    justify-content: center;
+    flex: 1 1 20%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 5% 25%;
+    margin-bottom: 0%;
+    margin-right: 28%;
+}
+.formulaire-review{
+    display: block;
+    box-sizing: content-box;
+    margin: 5% 25%;
+    padding: 10px;
+    text-align: center;
+    background-color: transparent;
+}
+.recherche{
+    display: flex;
+    margin: 2.5% 5%;
+    flex-wrap: wrap;
+}
+.carte{
+    display: flex;
+    margin: 0 10px;
+    padding: 5px;
+    flex-direction: column;
+    width: 17%;
+}
+div.radio_1{
+    margin: 0;
+    margin-right: 5%;
+}
+div.radio_2{
+    margin: 0;
+    margin-right: 5%;
+}
+
+/* fin body */
+/* footer */
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.contenu-btn{
+    padding: 10px;
+    justify-content: flex-end;
+    display: flex;
+    width: 100%;
+}
+.contenu-btn a{
+    margin-right: 5px;
+}
+.contenu-footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.contenu-footer > .copyright{
+    font-size: 0.75rem;
+}

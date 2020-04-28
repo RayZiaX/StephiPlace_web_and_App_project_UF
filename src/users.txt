@@ -1,0 +1,3 @@
+--INSERT INTO `users` (user_name,user_firstName,user_mail,user_pseudo,user_password,user_age,user_genre,user_tel,user_img) VALUES 
+--(`Jean`,`Delarue`,`jean.Delarue@gmail.com`,`JD`,`jeanDelarue`,38,`homme`,`/img/default_user.png`),
+--(`Françoise`,`Garnier`,`françoise.garnier@gmail.com`,`GarouXOXO`,``,45,`femme`,`/img/garou.png`)
