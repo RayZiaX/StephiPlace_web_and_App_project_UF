@@ -60,3 +60,8 @@ VALUES
 (2,'57 Rue Espariat', 13100, 'Aix-en-Provence'),
 (3,'38 Cours de la République', 13120, 'Gardanne')
 
+INSERT INTO `type_bien`
+VALUES
+(1,'appartement'),
+(2,'maison')
+

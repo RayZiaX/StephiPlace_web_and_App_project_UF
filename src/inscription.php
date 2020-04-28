@@ -18,7 +18,7 @@
 
 <body>
     <div class="form">
-        <form action="../php/traitement.php" method="POST" id="myform">
+        <form action="./php/traitement.php" method="POST" id="myform">
             <fieldset>
                 <legend>Stephi Place - Formulaire d'inscription</legend>
                 <label for="identifiant" class="label-form">Votre identifiant<i class="imporant">*</i></label><input type="text"
@@ -50,7 +50,7 @@
                     placeholder="descritpion optionel de vous, peut etre modifier plus tard"></textarea><br>
                 <input type="checkbox" name="condition" id="condition" /> en cochant vous acceptez <a href="#">les
                     conditions d'utilisation du site</a><br>
-                <input type="submit" value="s'inscrire" name="iscription">
+                <input type="submit" value="s'inscrire" name="envoi">
 
             </fieldset>
         </form>

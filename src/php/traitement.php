@@ -2,15 +2,50 @@
 
 //DELETE FROM users WHERE user_pseudo = 'RayZiaX'
 session_start();
+$utilisateur = 'root';
+$mdp = '';
+try{
+    $cnx = new PDO('mysql:host=localhost;dbname=stephiplace_data;port=3308',$utilisateur,$mdp);
+}catch(Exception $e) {
+    print($e->getMessage());
+    exit;
+}
+
+function getAgences($cnx){
+    $tab = [];
+    $rqt = "SELECT * FROM agence";
+    $stmt = $cnx->prepare($rqt);
+    $stmt->execute();
+    while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($tab,$line);
+    }
+    return $tab;
+}
+
+function getAgence($tab){
+    $tabAgence = [];
+    for ($i=0; $i < count($tab); $i++) {
+        $parts = $tab[$i];
+        $localisation = $parts['agence_localisation'];
+        $codePostal = $parts['agence_codePostal'];
+        $ville = $parts['agence_ville'];
+        $img = $parts['agence_img'];
+        $agence = "<div><img src='.$img' alt='img_annonce' class='img'></img><div>localisation: $localisation,$codePostal $ville</div></div><br>";
+        array_push($tabAgence,$agence);
+    }
+    return $tabAgence;
+}
+
+
 function getMenus(){
     if (empty($_SESSION['userName']) || $_SESSION['userName'] === null){
         $menus = <<<html
         <header>
-            <div class="contenu-header">
-                <div class="header-img">
-                    <a href="#"><img src="./img/Logo100x100sans_fond.png" alt="StephiPlace_logo"></a>
-                </div>
-                <div class="body">
+        <div class="contenu-header">
+        <div class="header-img">
+        <a href="index.php"><img src="./img/Logo100x100sans_fond.png" alt="StephiPlace_logo"></a>
+        </div>
+        <div class="body">
                     <div class="contenu contenu-btn-menu">
                         <div>
                             <a href="inscription.php" class="btn-profil">S'inscrire</a>
@@ -41,7 +76,7 @@ function getMenus(){
         <header>
             <div class="contenu-header">
                 <div class="header-img">
-                    <a href="#"><img src="./img/Logo100x100sans_fond.png" alt="StephiPlace_logo"></a>
+                    <a href="index.php"><img src="./img/Logo100x100sans_fond.png" alt="StephiPlace_logo"></a>
                 </div>
                 <div class="body">
                     <div class="contenu contenu-btn-menu">
@@ -69,14 +104,6 @@ function getMenus(){
     html;
     }
     return $menus;
-}
-$utilisateur = 'root';
-$mdp = '';
-try{
-    $cnx = new PDO('mysql:host=localhost;dbname=stephiplace_data;port=3308',$utilisateur,$mdp);
-}catch(Exception $e) {
-    print($e->getMessage());
-    exit;
 }
 
 if(!empty($_POST['iscription'])){
@@ -152,6 +179,12 @@ if (!empty($_POST['connexion'])) {
         echo "Une erreur est arrivée ! Verifiez vos données retour ...";
         header('Refresh: 2; url=../pages/connexion.php');
     }
+}
+
+if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){
+    echo "<p>Je recherche les biens </p>";
+}elseif(!empty($_POST['envoi']) && $_POST['envoi'] === "s'inscrire"){
+    echo"<p>Je m'inscrit !</p>";
 }
 
 

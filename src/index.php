@@ -22,7 +22,7 @@
         echo $menus;
     ?>
     <div class="formulaire">
-        <form action="./pages/recherche.php" method="GET">
+        <form action="./php/traitement.php" method="GET">
             <div class="entrer">
                 <input type="text" placeholder="budget" class="input" name="budget">
                 <input type="text" placeholder="Lieux" class="input" name="lieux">
@@ -30,23 +30,14 @@
             <div class="formulaire-accueil">
                 <div class="type">
                     <select name="typeB" id="type-bien" class="select">
-                        <option value="">Votre type de biens</option>
+                        <option value="none">Votre type de biens</option>
                         <option value="appartement">Appartement</option>
                         <option value="maison">Maison</option>
                     </select>
                 </div>
 
-                <button type="submit" id="envoie" name="envoi" class="btn btn-hover">Rechercher</button>
+                <input type="submit" value="recherche" name="envoi">
             </div>
-            <!-- <div class="type">
-                <div class="radio_1">
-                    <input type="radio" name="Apartement" id="Apart" class="radio biens">
-                    <label for="Apart" class="label">Apartement</label>
-                </div>
-                <div class="radio_2">
-                    <input type="radio" name="Maison" id="Maison" class="radio biens">
-                    <label for="Maison" class="label">Maison</label>
-                </div> -->
     </div>
     </form>
     </div>

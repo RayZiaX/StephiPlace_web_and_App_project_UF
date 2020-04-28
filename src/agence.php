@@ -1,6 +1,8 @@
 <?php
     include_once('./php/traitement.php');
     $menus = getMenus();
+    $agence = getAgences($cnx);
+    $agences = getAgence($agence);
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +21,18 @@
 <body>
     <?php
         echo $menus;
+
+
     ?>
+    <div>
+        <?php
+        foreach ($agences as $value) {
+            echo $value;
+        }
+        ?>
+    </div>
+
+
     <footer>
         <div class="contenu">
             <div class="contenu-footer copyright">
