@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./css/styleMain.css" />
     <link rel="stylesheet" href="./css/styleMenu.css">
     <link rel="stylesheet" href="./css/styleAsset.css">
+    <link rel="stylesheet" href="./css/styleAnnonce.css">
     <title>Stephi Place-Agence</title>
     <!-- <?php echo $AGENCE;?> -->
 </head>

@@ -1,7 +1,7 @@
 <?php
-include_once('../php/traitement.php');
+include_once('./php/traitement.php');
 session_destroy();
-header('Refresh: 3;url= ../index.php')
+header('Refresh: 3;url= ./index.php')
 ?>
 
 <!DOCTYPE html>

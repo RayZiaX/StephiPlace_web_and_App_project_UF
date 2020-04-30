@@ -47,21 +47,21 @@ CREATE TABLE IF NOT EXISTS `agence`
     `agence_ville` VARCHAR(255)
 );ENGINE=InnoDB
 
-INSERT INTO `biens` (`bien_id`,`bien_surface`,`bien_prix`,`user_id`,`id_type_bien`,`bien_img`,`bien_description`,`bien_localisation`,`agence_id`)
-VALUES
-(1,300,350000,null,2,'/img/maison_anonce1.jpg','petite maison avec un voisinage assez calme avec une piscine et un petit jardin pour les paysants', 'Meyreuil',3),
-(2,150,100000,null,1,'/img/maison_anonce3.jpg','Maison avec étage et munie d un garage zone calme très peu de trafic à 10 min d un carrefour market','Gardanne',3),
-(3,200,400,null,2,'/img/maison_anonce2.jpg','Appartement avec voisin calme bientôt mort pas de garage ou place de parking','Aix-en-Provence',2),
-(4,400,400000,null,1,'/img/maison_carousel3.jpg','Maison plan pied avec beaucoup de trafic mais passède un très grand terrain risque de guerre de gang et de descente de police','Marseille',1)
+-- INSERT INTO `biens` (`bien_id`,`bien_surface`,`bien_prix`,`user_id`,`id_type_bien`,`bien_img`,`bien_description`,`bien_localisation`,`agence_id`)
+-- VALUES
+-- (1,300,350000,null,2,'/img/maison_anonce1.jpg','petite maison avec un voisinage assez calme avec une piscine et un petit jardin pour les paysants', 'Meyreuil',3),
+-- (2,150,100000,null,1,'/img/maison_anonce3.jpg','Maison avec étage et munie d un garage zone calme très peu de trafic à 10 min d un carrefour market','Gardanne',3),
+-- (3,200,400,null,2,'/img/maison_anonce2.jpg','Appartement avec voisin calme bientôt mort pas de garage ou place de parking','Aix-en-Provence',2),
+-- (4,400,400000,null,1,'/img/maison_carousel3.jpg','Maison plan pied avec beaucoup de trafic mais passède un très grand terrain risque de guerre de gang et de descente de police','Marseille',1)
 
-INSERT INTO `agence` (`agence_id`,`agence_name`,`agence_localisation`)
-VALUES
-(1,'109 Avenue de la Timone', 13010,' Marseille'),
-(2,'57 Rue Espariat', 13100, 'Aix-en-Provence'),
-(3,'38 Cours de la République', 13120, 'Gardanne')
+-- INSERT INTO `agence` (`agence_id`,`agence_name`,`agence_localisation`)
+-- VALUES
+-- (1,'109 Avenue de la Timone', 13010,' Marseille'),
+-- (2,'57 Rue Espariat', 13100, 'Aix-en-Provence'),
+-- (3,'38 Cours de la République', 13120, 'Gardanne')
 
-INSERT INTO `type_bien`
-VALUES
-(1,'appartement'),
-(2,'maison')
+-- INSERT INTO `type_bien`
+-- VALUES
+-- (1,'appartement'),
+-- (2,'maison')
 

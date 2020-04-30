@@ -11,7 +11,7 @@ try{
     exit;
 }
 
-function getAgences($cnx){
+function getAgences($cnx){ // récupération de toutes les agences pour les afficher sur le site
     $tab = [];
     $rqt = "SELECT * FROM agence";
     $stmt = $cnx->prepare($rqt);
@@ -22,7 +22,7 @@ function getAgences($cnx){
     return $tab;
 }
 
-function getAgence($tab){
+function getAgence($tab){ 
     $tabAgence = [];
     for ($i=0; $i < count($tab); $i++) {
         $parts = $tab[$i];
@@ -30,14 +30,14 @@ function getAgence($tab){
         $codePostal = $parts['agence_codePostal'];
         $ville = $parts['agence_ville'];
         $img = $parts['agence_img'];
-        $agence = "<div><img src='.$img' alt='img_annonce' class='img'></img><div>localisation: $localisation,$codePostal $ville</div></div><br>";
+        $agence = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce' class='size-img'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir agence</a></div><div class='info'><span class='item'>localisation: $localisation, $codePostal $ville </span></div><div><h2>Description</h2><p>descrption</p></div></div></div></div><br>";
         array_push($tabAgence,$agence);
     }
     return $tabAgence;
 }
 
 
-function getMenus(){
+function getMenus(){ // permet d'afficher le menus sur toutes les pages du site en fonction de la connexion ou non
     if (empty($_SESSION['userName']) || $_SESSION['userName'] === null){
         $menus = <<<html
         <header>
@@ -81,10 +81,10 @@ function getMenus(){
                 <div class="body">
                     <div class="contenu contenu-btn-menu">
                         <div>
-                            <a href="./pages/profil.php" class="btn-profil">Bonjour $name<img src=".$imageProfil" alt="img_profil" class="img-profil"></a>
+                            <a href="./profil.php" class="btn-profil">Bonjour $name<img src=".$imageProfil" alt="img_profil" class="img-profil"></a>
                         </div>
                         <div>
-                            <a href="./pages/deconnexion.php" class="btn-profil">Déconnexion</a>
+                            <a href="./deconnexion.php" class="btn-profil">Déconnexion</a>
                         </div>
                     </div>
                     <div class="contenu-menu">
@@ -106,7 +106,7 @@ function getMenus(){
     return $menus;
 }
 
-if(!empty($_POST['iscription'])){
+if(!empty($_POST['iscription'])){ // permet a un visteur de s'enregister sur la base de donnée
     $user = $_POST['identifiant'];
     $mdp = $_POST['mdp'];
     $mdpConfirm = $_POST['confirm_mdp'];
@@ -162,7 +162,7 @@ if(!empty($_POST['iscription'])){
 }
 
 
-if (!empty($_POST['connexion'])) {
+if (!empty($_POST['connexion'])) { //permet a un utilisateur de se connecter au site
     $utilisateur = $_POST['user'];
     $passwd = $_POST['password'];
     $rqt = "SELECT * FROM users WHERE user_pseudo = :utilisateur";
@@ -181,34 +181,94 @@ if (!empty($_POST['connexion'])) {
     }
 }
 
-if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){
-    echo "<p>Je recherche les biens </p>";
-}elseif(!empty($_POST['envoi']) && $_POST['envoi'] === "s'inscrire"){
-    echo"<p>Je m'inscrit !</p>";
-}
 
-
-function getAnnonce($cnx){
-    $tab = [];
-    $tabAffichage = [];
-    $rqt = "SELECT * FROM annonces";
+function getTypeBien($cnx){
+    $tabType = [];
+    $rqt = "SELECT type_bien_name FROM type_bien";
     $stmt = $cnx->prepare($rqt);
     $stmt->execute();
     while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
-        array_push($tab, $line);
+        foreach($line as $value){
+            $select = "<option value='$value'>$value</option>";
+            array_push($tabType, $select);
+        }
     }
-    for ($i=0; $i < count($tab); $i++) { 
-        $parts = $tab[$i];
-        $img = $parts['annonce_img'];
-        $type = $parts['id_type_bien'];
-        $description = $parts['annonce_description'];
-        $localisation = $parts['annonce_localisation'];
-        $prix = $parts['annonce_prix'];
-        $surface = $parts['annonce_surface'];
-        $affiche = "<div><img src='.$img' alt='img_annonce'></img><div><span>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><p>$description</p></div></div><br>";
-        array_push($tabAffichage, $affiche);
-    }
-    return $tabAffichage;
+    return $tabType;
 }
+
+if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){ // création des cookies lors pour crée la recherche
+    setcookie("recherche[budgetmin]",$_GET['budgetmin'],time()+30,"/");
+    setcookie("recherche[budgetmax]",$_GET['budgetmax'],time()+30,"/");
+    setcookie("recherche[surfacemin]",$_GET['surfacemin'],time()+30,"/");
+    setcookie("recherche[surfacemax]",$_GET['surfacemax'],time()+30,"/");
+    setcookie("recherche[pieces]",$_GET['pieces'],time()+30,"/");
+    setcookie("recherche[lieux]",$_GET['lieux'],time()+30,"/");
+    echo "Vous allez etres redirigez";
+    header('Refresh: 2; url=../annonces.php');
+}
+
+
+
+function annonce($cnx){ //affiche toutes les annonces en fonction d'une recherche ou non
+    if(!empty($_COOKIE['recherche'])){
+        $tabBien = [];
+        $array = [];
+        foreach ($_COOKIE['recherche'] as $value) {
+            array_push($array, $value);
+        }
+        $budgetMin = $array[0];
+        $budgetMax = $array[1];
+        $surfaceMin = $array[2];
+        $surfaceMax = $array[3];
+        // $piece = $array[4];
+        $lieux = $array[4];
+        $rqt = "SELECT annonce_img,annonce_surface,annonce_prix,annonce_description,annonce_localisation,type_bien.type_bien_name FROM annonces INNER JOIN type_bien ON annonces.id_type_bien = type_bien.id_type_bien WHERE (annonce_prix BETWEEN :budgetmin AND :budgetmax) AND (annonce_localisation = :ville) AND (annonce_surface BETWEEN :surfacemin AND :surfacemax)";
+        $stmt = $cnx->prepare($rqt);
+        $stmt->bindParam(':budgetmin',$budgetMin,PDO::PARAM_INT);
+        $stmt->bindParam(':budgetmax',$budgetMax,PDO::PARAM_INT);
+        $stmt->bindParam(':ville',$lieux,PDO::PARAM_STR);
+        $stmt->bindParam(':surfacemin',$surfaceMin,PDO::PARAM_INT);
+        $stmt->bindParam(':surfacemax',$surfaceMax,PDO::PARAM_INT);
+        $stmt->execute();
+        $tab = [];
+        while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+            array_push($tab,$line);
+        }
+        for ($i=0; $i < count($tab); $i++) { 
+            $parts = $tab[$i];
+            $img = $parts['annonce_img'];
+            $type = $parts['type_bien_name'];
+            $description = $parts['annonce_description'];
+            $localisation = $parts['annonce_localisation'];
+            $prix = $parts['annonce_prix'];
+            $surface = $parts['annonce_surface'];
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir annonce</a></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            array_push($tabBien,$affiche);
+        }    
+        return $tabBien;
+    }else{
+        $tab = [];
+        $tabAffichage = [];
+        $rqt = "SELECT * FROM annonces INNER JOIN type_bien WHERE annonces.id_type_bien = type_bien.id_type_bien";
+        $stmt = $cnx->prepare($rqt);
+        $stmt->execute();
+        while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+            array_push($tab, $line);
+        }
+        for ($i=0; $i < count($tab); $i++) { 
+            $parts = $tab[$i];
+            $img = $parts['annonce_img'];
+            $type = $parts['type_bien_name'];
+            $description = $parts['annonce_description'];
+            $localisation = $parts['annonce_localisation'];
+            $prix = $parts['annonce_prix'];
+            $surface = $parts['annonce_surface'];
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir annonce</a></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            array_push($tabAffichage, $affiche);
+        }
+        return $tabAffichage;
+    }
+}
+
 
 ?>

@@ -1,0 +1,46 @@
+.corp{
+    display: flex;
+}
+.main{
+    height: 350px;
+    width: 80%;
+    display: flex;
+    margin: 5% 10% 0 10%;
+}
+.fond_img img {
+    border-radius: 2px;
+    border: solid #000 2px;
+    margin: 0;
+}
+.size-img{
+    height: 250px;
+    width: 500px;
+}
+.contener{
+    display: flex;
+    flex-direction: column;
+    padding-left: 25px;
+}
+
+.reseau{
+    display: flex;
+    flex: 1;
+    padding-left: 10px;
+
+}
+.logo{
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    margin: 0 15px;
+}
+.corp .donnee{
+    display: flex;
+    flex-direction: column;
+}
+.donnee h2, .donnee h3{
+    margin: 0;
+}
+.info h2{
+    margin: 0;
+}
