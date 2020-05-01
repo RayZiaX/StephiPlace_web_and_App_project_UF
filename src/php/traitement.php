@@ -209,7 +209,7 @@ if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){ // création des c
 
 
 
-function annonce($cnx){ //affiche toutes les annonces en fonction d'une recherche ou non
+function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherche ou non
     if(!empty($_COOKIE['recherche'])){
         $tabBien = [];
         $array = [];
@@ -222,7 +222,7 @@ function annonce($cnx){ //affiche toutes les annonces en fonction d'une recherch
         $surfaceMax = $array[3];
         // $piece = $array[4];
         $lieux = $array[4];
-        $rqt = "SELECT annonce_img,annonce_surface,annonce_prix,annonce_description,annonce_localisation,type_bien.type_bien_name FROM annonces INNER JOIN type_bien ON annonces.id_type_bien = type_bien.id_type_bien WHERE (annonce_prix BETWEEN :budgetmin AND :budgetmax) AND (annonce_localisation = :ville) AND (annonce_surface BETWEEN :surfacemin AND :surfacemax)";
+        $rqt = "SELECT annonce_img,annonce_surface,annonce_prix,annonce_description,annonce_localisation,type_bien.type_bien_name,annonce_id FROM annonces INNER JOIN type_bien ON annonces.id_type_bien = type_bien.id_type_bien WHERE (annonce_prix BETWEEN :budgetmin AND :budgetmax) AND (annonce_localisation = :ville) AND (annonce_surface BETWEEN :surfacemin AND :surfacemax)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':budgetmin',$budgetMin,PDO::PARAM_INT);
         $stmt->bindParam(':budgetmax',$budgetMax,PDO::PARAM_INT);
@@ -242,7 +242,8 @@ function annonce($cnx){ //affiche toutes les annonces en fonction d'une recherch
             $localisation = $parts['annonce_localisation'];
             $prix = $parts['annonce_prix'];
             $surface = $parts['annonce_surface'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir annonce</a></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            $id = $parts['annonce_id'];
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='descBien' class='btn-hover btn' value='$id'>Voir annonce</button></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
             array_push($tabBien,$affiche);
         }    
         return $tabBien;
@@ -263,12 +264,66 @@ function annonce($cnx){ //affiche toutes les annonces en fonction d'une recherch
             $localisation = $parts['annonce_localisation'];
             $prix = $parts['annonce_prix'];
             $surface = $parts['annonce_surface'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir annonce</a></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            $id = $parts['annonce_id'];
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='descBien' class='btn-hover btn' value='$id'>Voir annonce</button></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
             array_push($tabAffichage, $affiche);
         }
         return $tabAffichage;
     }
 }
 
+if(!empty($_GET['descBien'])){
+    setcookie("descriptionBien",$_GET['descBien'],time()+30,"/");
+    header('Location: ../bienDescription.php');
+}
 
+function getBien($cnx){
+    if(!empty($_COOKIE['descriptionBien'])){
+        $id = $_COOKIE['descriptionBien'];
+        $tab = [];
+        $page = "";
+        $tabAffichage = [];
+        $rqt = "SELECT * FROM annonces INNER JOIN type_bien WHERE (annonces.id_type_bien = type_bien.id_type_bien) AND (annonces.annonce_id = :id)";
+        $stmt = $cnx->prepare($rqt);
+        $stmt->bindParam(':id',$id, PDO::PARAM_INT);
+        $stmt->execute();
+        while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+            array_push($tab, $line);
+        }
+        for ($i=0; $i < count($tab); $i++) { 
+            $parts = $tab[$i];
+            $description = $parts['annonce_description'];
+            $type = $parts['type_bien_name'];
+            $surface = $parts['annonce_surface'];
+            $img = $parts['annonce_img'];
+            $ville = $parts['annonce_localisation'];
+            $agence = $parts['agence_id'];
+            $prix = $parts['annonce_prix'];
+            $page = <<<html
+            <div class="body">
+            <div>
+            <div class="contenu-img">
+                <img src=".$img" alt="img_bien">
+                <img src=".$img" alt="img_bien">
+                <img src=".$img" alt="img_bien">
+                <img src=".$img" alt="img_bien">
+            </div>
+            <div>
+                <a href="#">Contact agence</a>
+                <a href="#">Contact client</a>
+            </div>
+            </div>
+            <div class="information">
+                <span>localisation: $ville</span><br>
+                <span>prix: $prix</span><br>
+                <span>surface: $surface</span><br>
+                <span>type de bien: $type</span><br>
+                <p>Description: $description</p>
+            </div>
+            </div>
+            html;
+            return $page;
+        }
+    }
+}
 ?>

@@ -1,7 +1,8 @@
 <?php
 include_once('./php/traitement.php');
 $menus = getMenus();
-$tabBiens = Annonce($cnx);
+$type = getTypeBien($cnx);
+$tabBiens = annonces($cnx);
 ?>
 
 <!DOCTYPE html>
