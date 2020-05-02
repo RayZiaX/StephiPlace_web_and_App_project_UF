@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/styleMenu.css">
     <link rel="stylesheet" href="./css/styleAsset.css">
     <link rel="stylesheet" href="./css/styleConnexion.css" />
-    <title>Stephi Place-Connexion</title>
+    <title>StephiPlace - Connexion</title>
 </head>
 
 <body>

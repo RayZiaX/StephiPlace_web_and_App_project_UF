@@ -1,7 +1,7 @@
 <?php
     include_once('./php/traitement.php');
     $menus = getMenus();
-    $description = getBien($cnx);
+    $description = getDescription($cnx);
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./css/styleMain.css"/>
     <link rel="stylesheet" href="./css/styleMenu.css">
     <link rel="stylesheet" href="./css/styleAsset.css">
-    <title>Document</title>
+    <title>StephiPlace - Description</title>
 </head>
 
 <body>

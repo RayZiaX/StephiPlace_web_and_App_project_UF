@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./css/styleAsset.css">
     <link rel="shortcut icon" href="favIcon.ico" type="image/x-icon">
 
-    <title>Stephi Place - Accueil</title>
+    <title>StephiPlace - Accueil</title>
 </head>
 
 <body>

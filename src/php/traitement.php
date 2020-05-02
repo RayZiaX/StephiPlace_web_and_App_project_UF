@@ -30,7 +30,8 @@ function getAgence($tab){
         $codePostal = $parts['agence_codePostal'];
         $ville = $parts['agence_ville'];
         $img = $parts['agence_img'];
-        $agence = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce' class='size-img'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><a href='#' class='btn btn-hover'>Voir agence</a></div><div class='info'><span class='item'>localisation: $localisation, $codePostal $ville </span></div><div><h2>Description</h2><p>descrption</p></div></div></div></div><br>";
+        $id = $parts['agence_id'];
+        $agence = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce' class='size-img'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir agence</button><input type='hidden' name='agence' value='agence'></form></div><div class='info'><span class='item'>localisation: $localisation, $codePostal $ville </span></div><div><h2>Description</h2><p>descrption</p></div></div></div></div><br>";
         array_push($tabAgence,$agence);
     }
     return $tabAgence;
@@ -243,7 +244,7 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
             $prix = $parts['annonce_prix'];
             $surface = $parts['annonce_surface'];
             $id = $parts['annonce_id'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='descBien' class='btn-hover btn' value='$id'>Voir annonce</button></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
             array_push($tabBien,$affiche);
         }    
         return $tabBien;
@@ -265,24 +266,27 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
             $prix = $parts['annonce_prix'];
             $surface = $parts['annonce_surface'];
             $id = $parts['annonce_id'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='descBien' class='btn-hover btn' value='$id'>Voir annonce</button></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></img></div><div class='contener'><div class='corp'><div class='donnee'><h2>Titre<h2></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><h2>Description</h2><p>$description</p></div></div></div></div><br>";
             array_push($tabAffichage, $affiche);
         }
         return $tabAffichage;
     }
 }
 
-if(!empty($_GET['descBien'])){
-    setcookie("descriptionBien",$_GET['descBien'],time()+30,"/");
-    header('Location: ../bienDescription.php');
+if(!empty($_GET['description']) && $_GET['bien'] === "bien"){
+    setcookie("descriptionBien",$_GET['description'],time()+30,"/");
+    header('Location: ../description.php');
+}elseif (!empty($_GET['description']) && $_GET['agence'] === "agence") {
+    setcookie("descriptionAgence",$_GET['description'],time()+30,"/");
+    header('Location: ../description.php');
 }
 
-function getBien($cnx){
+
+function getDescription($cnx){
     if(!empty($_COOKIE['descriptionBien'])){
         $id = $_COOKIE['descriptionBien'];
         $tab = [];
         $page = "";
-        $tabAffichage = [];
         $rqt = "SELECT * FROM annonces INNER JOIN type_bien WHERE (annonces.id_type_bien = type_bien.id_type_bien) AND (annonces.annonce_id = :id)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':id',$id, PDO::PARAM_INT);
@@ -324,6 +328,222 @@ function getBien($cnx){
             html;
             return $page;
         }
+    }elseif(!empty($_COOKIE['descriptionAgence'])){
+        $id = $_COOKIE['descriptionAgence'];
+        $tab = [];
+        $page = "";
+        $rqt = "SELECT * FROM agence INNER JOIN type_bien WHERE (agence_id = :id)";
+        $stmt = $cnx->prepare($rqt);
+        $stmt->bindParam(':id',$id, PDO::PARAM_INT);
+        $stmt->execute();
+        while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+            array_push($tab, $line);
+        }
+        for ($i=0; $i < count($tab); $i++) { 
+            $parts = $tab[$i];
+            // $description = $parts['agence_description'];
+            $img = $parts['agence_img'];
+            $localisation = $parts['agence_localisation'];
+            $ville = $parts['agence_ville'];
+            $codePostal = $parts['agence_codePostal'];
+            $page = <<<html
+            <div class="body">
+            <div>
+            <div class="contenu-img">
+                <img src=".$img" alt="img_bien">
+            </div>
+            <div>
+                <a href="#">Contact agence</a>
+                <a href="#">Voir annonces</a>
+            </div>
+            </div>
+            <div class="information">
+                <span>localisation: $localisation,$codePostal $ville</span><br>
+                <p>Description: </p>
+            </div>
+            </div>
+            html;
+            return $page;
+        }
     }
+}
+
+function infoCompte($cnx){
+    $data = [];
+    $rqt = "SELECT * FROM users WHERE user_pseudo = :pseudo";
+    $stmt = $cnx->prepare($rqt);
+    $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+    $stmt->execute();
+    while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($data,$line);
+    }
+    for ($i=0; $i < count($data); $i++) { 
+        $parts = $data[$i];
+        $pseudo = $parts['user_pseudo'];
+        $password = $parts['user_password'];
+        $mail = $parts['user_mail'];
+        $nom = $parts['user_name'];
+        $prenom = $parts['user_firstName'];
+        $genre = $parts['user_genre'];
+        $tel = $parts['user_tel'];
+        $age = $parts['user_age'];
+        $donnee = <<<profil
+        <div>
+            <div>
+                <span>pseudo:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newPseudo" placeholder='$pseudo'>
+                <input type="hidden" name="info" value="1">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+            <span>mot de passe:</span>
+            <form action="./php/traitement.php" method="POST">
+            <input type="password" name="newPassword">
+            <input type="hidden" name="info" value="2">
+            <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+            </form>
+            </div>
+            <div>
+                <span>mail:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newmail" placeholder='$mail'>
+                <input type="hidden" name="info" value="3">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+                <span>prénom:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newName" placeholder='$nom'>
+                <input type="hidden" name="info" value="4">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+                <span>nom:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newFirstname" placeholder='$prenom'>
+                <input type="hidden" name="info" value="5">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+                <span>age:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newAge" placeholder='$age'>
+                <input type="hidden" name="info" value="6">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+                <span>tel:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newTel" placeholder='$tel'>
+                <input type="hidden" name="info" value="7">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+            <div>
+                <span>genre:</span>
+                <form action="./php/traitement.php" method="POST">
+                <input type="text" name="newGenre" placeholder='$genre'>
+                <input type="hidden" name="info" value="8">
+                <input type="submit" value="modifier" class='btn btn-hover' name='modifier'>
+                </form>
+            </div>
+        </div>
+        profil;
+        return $donnee;
+    }
+}
+
+function ModifInfo($cnx){
+    if(!empty($_POST['modifier'])){
+        switch ($_POST['info']) {
+            case 1:
+                $modif = $_POST['newPseudo'];
+                $rqt="UPDATE users SET user_pseudo = :modifpseudo WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':modifPseudo',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 2:
+                $modif = password_hash($_POST['newPassword'],PASSWORD_DEFAULT);
+                $rqt="UPDATE users SET user_password = :password WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':password',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 3:
+                $modif = $_POST['newmail'];
+                $rqt="UPDATE users SET user_mail = :mail WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':mail',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 4:
+                $modif = $_POST['newName'];
+                $rqt="UPDATE users SET user_name = :name WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':name',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 5:
+                $modif = $_POST['newFirstname'];
+                $rqt="UPDATE users SET user_firstName = :firstName WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':firstName',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 6:
+                $modif = $_POST['newAge'];
+                $rqt="UPDATE users SET user_age = :age WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':age',$modif,PDO::PARAM_INT);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 7:
+                $modif = $_POST['newTel'];
+                $rqt="UPDATE users SET user_tel = :tel WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':tel',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                $warn = "<p>Les donnée on etaient modifiées</p>";
+                break;
+            case 8:
+                $modif = $_POST['newGenre'];
+                $rqt="UPDATE users SET user_genre = :genre WHERE user_pseudo = :pseudo";
+                $stmt = $cnx->prepare($rqt);
+                $stmt->bindParam(':pseudo',$_SESSION['userName'],PDO::PARAM_STR);
+                $stmt->bindParam(':genre',$modif,PDO::PARAM_STR);
+                $stmt->execute();
+                break;
+            default:
+                $warn = "<p>Erreur !</p>";
+                break;
+        }
+    }else{
+        $warn = "<p>Veuillez remplir le champ voulue</p>";
+    }
+    return $warn;
+}
+if (!empty($_POST['modifier'])) {
+    ModifInfo($cnx);
+    header('Location: ../profil.php');
 }
 ?>
