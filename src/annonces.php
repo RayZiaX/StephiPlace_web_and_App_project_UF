@@ -54,6 +54,16 @@ $tabBiens = annonces($cnx);
             }
         ?>
     </div>
-
+    <footer>
+        <div class="contenu">
+            <div class="contenu-footer copyright">
+                <p class="copyright">©all right reserved</p>
+            </div>
+            <div class="contenu-btn">
+                <a href="" class="btn">Nous contacter</a>
+                <a href="" class="btn">Réseaux</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

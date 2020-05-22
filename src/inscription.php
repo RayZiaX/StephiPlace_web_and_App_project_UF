@@ -1,5 +1,6 @@
 <?php
-
+include_once("./php/traitement.php");
+$menu = getMenus();
 ?>
 
 <!DOCTYPE html>
@@ -15,28 +16,37 @@
     <link rel="shortcut icon" href="./favIcon.ico" type="image/x-icon">
     <title>Stephi Place - inscription</title>
 </head>
-
 <body>
+    <header>
+        <?php
+            echo $menu;
+        ?>
+    </header>
     <div class="form">
         <form action="./php/traitement.php" method="POST" id="myform">
             <fieldset>
                 <legend>Stephi Place - Formulaire d'inscription</legend>
-                <label for="identifiant" class="label-form">Votre identifiant<i class="imporant">*</i></label><input type="text"
-                    name="identifiant" id="identifiant"><br>
-                <label for="mdp" class="label-form">Votre mot de passe<i class="imporant">*</i></label><input type="password" name="mdp"
-                    id="mdp"><br>
-                <label for="mdp" class="label-form">confirmer le mot de passe</label><input type="password" name="confirm_mdp"
-                    id="confirm_mdp"><br>
                 <label for="nom" class="label-form">Nom<i class="imporant">*</i> </label><input type="text" name="nom" id="nom"
                     class="nom" /><br>
                 <label for="prenom" class="label-form">Prenom<i class="imporant">*</i></label><input type="text" name="prenom" id="prenom"
                     class="prenom" /><br>
+                <label for="mdp" class="label-form">Votre mot de passe<i class="imporant">*</i></label><input type="password" name="mdp"
+                    id="mdp"><br>
+                <label for="mdp" class="label-form">confirmer le mot de passe</label><input type="password" name="confirm_mdp"
+                    id="confirm_mdp"><br>
                 <label for="email" class="label-form">Email<i class="important">*</i></label><input type="email" name="email" id="email"
                     class="email" /><br>
                 <label for="img">Image de profil: <input type="file" name="img" id="img"></label><br>
                 <label for="telephone">téléphone: <input type="text" name="telephone" id="telephone"></label><br>
                 <label for="age" class="label-form">votre age<i class="important">*</i></label><input type="text" name="age" id="age"
                     class="age" /><br>
+                <label for="adresse" class="label-form">Votre adresse<i class="important">*</i></label><input type="text" name="adresse" id="adresse"
+                    class="adresse" /><br>
+                <label for="ville" class="label-form">Votre ville<i class="important">*</i></label><input type="text" name="ville" id="ville"
+                    class="ville" /><br>
+                <label for="codePostal" class="label-form">le code postal<i class="important">*</i></label><input type="text" name="codePostal" id="codePostal"
+                    class="codePostal" /><br>
+                <input type="hidden" name="status" value="client">
                 <label for="civilite" class="label-form">Civilité
                     <select name="civilite" id="civilite">
                         <option value="homme">Homme</option>
@@ -50,7 +60,7 @@
                     placeholder="descritpion optionel de vous, peut etre modifier plus tard"></textarea><br>
                 <input type="checkbox" name="condition" id="condition" /> en cochant vous acceptez <a href="#">les
                     conditions d'utilisation du site</a><br>
-                <input type="submit" value="s'inscrire" name="envoi">
+                <input type="submit" value="s'inscrire" name="inscription">
 
             </fieldset>
         </form>
