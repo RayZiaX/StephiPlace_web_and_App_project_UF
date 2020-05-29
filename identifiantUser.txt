@@ -1,1 +1,19 @@
-prenom:Frank, nom:Dupont, MDP:FrankDupont, email:frank.dupont@gmail.com,age:25, tel:0658471230, ville: Mereuil, adresse:53 avenue du pont de l'Arc,code postal: 13590, civilité: Homme, description: j'aime le riz soufflé et les tartes tatins
+utilisateur 1:
+prenom:Frank, nom:Dupont, MDP:FrankDupont, email:frank.dupont@gmail.com,age:25, 
+tel:0658471230, ville: Mereuil, adresse:53 avenue du pont de l'Arc,code postal: 13590, 
+civilité: Homme, description: j'aime le riz soufflé et les tartes tatins
+
+utilisateur 2:
+prenom: Michel, nom: Delarue, MDP: MichelDelarue, email: michel.delarue@gmail.com, 
+tel: 0658472160, Ville: Gardanne, adresse: 45 rue du petit ecolier,Code postal: 13120, 
+civilité: Homme, description: agent de la paix avant tous
+
+utilisateur 3:
+prenom: Christianne, nom: Michel, MDP: MichelChristianne, email: christianne.michel@yahoo.com,
+tel: 0645231529, age: 65, ville: Simiane, adresse: 24 chemin du petit tonnere, code postal: 13109,
+civilité: Femme, description: cherche appartement pour ma fille
+
+utilisateur 4:
+nom: Kratovitch,prenom: Agathe, MDP: KratovitchAgathe, email: agathe.kratovitch@gmail.com,age 30,
+tel: 0654231578, ville: Marseille, adresse: 23 rue le petit savon, code postal: 13001,
+civilité: Femme, description: Le meilleur agent de tous Marseille

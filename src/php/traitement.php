@@ -68,8 +68,7 @@ function getMenus(){ // permet d'afficher le menus sur toutes les pages du site 
                 </div>
             </div>
         </header>
-
-    html;
+        html;
     }elseif($_SESSION['userName']){
         $name = htmlentities($_SESSION['userName']);
         $imageProfil = htmlentities($_SESSION['img_profil']);
@@ -93,7 +92,7 @@ function getMenus(){ // permet d'afficher le menus sur toutes les pages du site 
                             <ul>
                                 <li><a href="#">FAQ</a></li>
                                 <li><a href="./annonces.php">Biens immobiliers</a></li>
-                                <li><a href="./pages/agence.php">Agence</a></li>
+                                <li><a href="./agence.php">Agence</a></li>
                                 <!-- <li></li> -->
                             </ul>
                         </nav>
@@ -196,19 +195,6 @@ if (!empty($_POST['connexion'])) { //permet a un utilisateur de se connecter au 
 }
 
 
-function getTypeBien($cnx){
-    $tabType = [];
-    $rqt = "SELECT type_bien_name FROM type_bien";
-    $stmt = $cnx->prepare($rqt);
-    $stmt->execute();
-    while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
-        foreach($line as $value){
-            $select = "<option value='$value'>$value</option>";
-            array_push($tabType, $select);
-        }
-    }
-    return $tabType;
-}
 
 if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){ // création des cookies lors pour crée la recherche
     setcookie("recherche[budgetmin]",$_GET['budgetmin'],time()+30,"/");
@@ -236,7 +222,7 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
         $surfaceMax = $array[3];
         // $piece = $array[4];
         $lieux = $array[4];
-        $rqt = "SELECT annonce_img,annonce_surface,annonce_prix,annonce_description,annonce_localisation,type_bien.type_bien_name,annonce_id FROM annonces INNER JOIN type_bien ON annonces.id_type_bien = type_bien.id_type_bien WHERE (annonce_prix BETWEEN :budgetmin AND :budgetmax) AND (annonce_localisation = :ville) AND (annonce_surface BETWEEN :surfacemin AND :surfacemax)";
+        $rqt = "SELECT bien_img,bien_surface,bien_prix,bien_description,bien_adresse,bien_type,bien_id FROM bien WHERE (bien_prix BETWEEN :budgetmin AND :budgetmax) AND (bien_adresse = :ville) AND (bien_surface BETWEEN :surfacemin AND :surfacemax)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':budgetmin',$budgetMin,PDO::PARAM_INT);
         $stmt->bindParam(':budgetmax',$budgetMax,PDO::PARAM_INT);
@@ -250,13 +236,13 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
         }
         for ($i=0; $i < count($tab); $i++) { 
             $parts = $tab[$i];
-            $img = $parts['annonce_img'];
-            $type = $parts['type_bien_name'];
-            $description = $parts['annonce_description'];
-            $localisation = $parts['annonce_localisation'];
-            $prix = $parts['annonce_prix'];
-            $surface = $parts['annonce_surface'];
-            $id = $parts['annonce_id'];
+            $img = $parts['bien_img'];
+            $type = $parts['bien_type'];
+            $description = $parts['bien_description'];
+            $localisation = $parts['bien_adresse'];
+            $prix = $parts['bien_prix'];
+            $surface = $parts['bien_surface'];
+            $id = $parts['bien_id'];
             $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>Titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
             array_push($tabBien,$affiche);
         }    
@@ -264,7 +250,7 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
     }else{
         $tab = [];
         $tabAffichage = [];
-        $rqt = "SELECT * FROM annonces INNER JOIN type_bien WHERE annonces.id_type_bien = type_bien.id_type_bien";
+        $rqt = "SELECT * FROM bien";
         $stmt = $cnx->prepare($rqt);
         $stmt->execute();
         while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -272,14 +258,15 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
         }
         for ($i=0; $i < count($tab); $i++) { 
             $parts = $tab[$i];
-            $img = $parts['annonce_img'];
-            $type = $parts['type_bien_name'];
-            $description = $parts['annonce_description'];
-            $localisation = $parts['annonce_localisation'];
-            $prix = $parts['annonce_prix'];
-            $surface = $parts['annonce_surface'];
-            $id = $parts['annonce_id'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>Titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
+            $titre =$parts['bien_nom'];
+            $img = $parts['bien_img'];
+            $type = $parts['bien_type'];
+            $description = $parts['bien_description'];
+            $localisation = $parts['bien_adresse'];
+            $prix = $parts['bien_prix'];
+            $surface = $parts['bien_surface'];
+            $id = $parts['bien_id'];
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>$titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
             array_push($tabAffichage, $affiche);
         }
         return $tabAffichage;
@@ -300,7 +287,7 @@ function getDescription($cnx){
         $id = $_COOKIE['descriptionBien'];
         $tab = [];
         $page = "";
-        $rqt = "SELECT * FROM annonces INNER JOIN type_bien WHERE (annonces.id_type_bien = type_bien.id_type_bien) AND (annonces.annonce_id = :id)";
+        $rqt = "SELECT * FROM bien WHERE bien_id = :id";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':id',$id, PDO::PARAM_INT);
         $stmt->execute();
@@ -309,13 +296,13 @@ function getDescription($cnx){
         }
         for ($i=0; $i < count($tab); $i++) { 
             $parts = $tab[$i];
-            $description = $parts['annonce_description'];
-            $type = $parts['type_bien_name'];
-            $surface = $parts['annonce_surface'];
-            $img = $parts['annonce_img'];
-            $ville = $parts['annonce_localisation'];
-            $agence = $parts['agence_id'];
-            $prix = $parts['annonce_prix'];
+            $description = $parts['bien_description'];
+            $type = $parts['bien_type'];
+            $surface = $parts['bien_surface'];
+            $img = $parts['bien_img'];
+            $ville = $parts['bien_adresse'];
+            // $agence = $parts['agence_id'];
+            $prix = $parts['bien_prix'];
             $page = <<<html
             <div class="body">
             <div>
@@ -345,7 +332,7 @@ function getDescription($cnx){
         $id = $_COOKIE['descriptionAgence'];
         $tab = [];
         $page = "";
-        $rqt = "SELECT * FROM agence INNER JOIN type_bien WHERE (agence_id = :id)";
+        $rqt = "SELECT * FROM agence WHERE (agence_id = :id)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':id',$id, PDO::PARAM_INT);
         $stmt->execute();
@@ -356,7 +343,7 @@ function getDescription($cnx){
             $parts = $tab[$i];
             // $description = $parts['agence_description'];
             $img = $parts['agence_img'];
-            $localisation = $parts['agence_localisation'];
+            $localisation = $parts['agence_adresse'];
             $ville = $parts['agence_ville'];
             $codePostal = $parts['agence_codePostal'];
             $page = <<<html

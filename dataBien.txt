@@ -1,0 +1,27 @@
+bien n°1:
+
+titre:T2 - appartement Gardanne
+adresse: 95 rue du 8 mai 1940
+code postal: 13120
+ville: Gardanne
+img: /maison_anonce3.jpg
+prix: 200
+nb piece: 4
+surface: 20
+type de bien: apartement
+description: Apartement construit dans les années 80 a proximiter du lycée Fourcade
+client: Dupont Frank
+dépendance: garage, parking, balcon
+
+bien n°2:
+
+titre: studio dans Aix en provence
+adresse: 26 rue de la paix
+code postal: 13100
+ville: Aix-en-Provence
+img: /maison_anonce1.jpg
+prix: 500
+nb pièces: 2
+surface: 15
+type de bien: appartement
+description: studio au 3 ème avec balcon et un parking

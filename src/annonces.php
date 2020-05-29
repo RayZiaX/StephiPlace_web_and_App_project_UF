@@ -1,7 +1,6 @@
 <?php
 include_once('./php/traitement.php');
 $menus = getMenus();
-$type = getTypeBien($cnx);
 $tabBiens = annonces($cnx);
 ?>
 
@@ -36,11 +35,9 @@ $tabBiens = annonces($cnx);
                 <div class="type">
                     <select name="typeB" id="type-bien" class="select">
                         <option value="none">Votre type de biens</option>
-                        <?php
-                            foreach ($type as $value) {
-                                echo $value;
-                            }
-                        ?>
+                        <option value="Appartement">Appartement</option>
+                        <option value="Maison">Maison</option>
+                        <option value="Studio">Studio</option>
                     </select>
                 </div>
                 <input type="submit" value="recherche" name="envoi" class="btn btn-hover">
