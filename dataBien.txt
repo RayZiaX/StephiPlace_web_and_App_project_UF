@@ -25,3 +25,16 @@ nb pièces: 2
 surface: 15
 type de bien: appartement
 description: studio au 3 ème avec balcon et un parking
+
+bien n°3:
+
+titre: maison proche du vieux port
+adresse: 50 avenue des marins pêcheur
+code postal: 13009
+ville: Marseille
+img: /maison_annonce3.jpg
+prix: 250 000
+nb piece: 7
+surface: 60m²
+type de bien: maison
+decription: maison proche du vieux port calme hors periode hestivale

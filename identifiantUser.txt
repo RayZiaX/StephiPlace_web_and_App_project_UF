@@ -17,3 +17,8 @@ utilisateur 4:
 nom: Kratovitch,prenom: Agathe, MDP: KratovitchAgathe, email: agathe.kratovitch@gmail.com,age 30,
 tel: 0654231578, ville: Marseille, adresse: 23 rue le petit savon, code postal: 13001,
 civilité: Femme, description: Le meilleur agent de tous Marseille
+
+utilisateur 5:
+nom: Margueritte, prenom: Faustine, MDP: MargueritteFaustine, email: faustine.Margueritte@gmail.com,
+tel: 0695342518, ville: Aix en provence, adresse: 42 rue des coquelicot, code postal: 13090,
+civilité: femme, description: je cherche un appartement de 20 m² dans Aix

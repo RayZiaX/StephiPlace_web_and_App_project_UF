@@ -53,9 +53,17 @@ $menu = getMenus();
                         <option value="femme">Femme</option>
                         <option value="autre">Autre</option>
                     </select>
+                </label><br>
+                <label for="statusClient" class="label-form">Qui êtes-vous ?
+                    <select name="statusClient" id="statusClient">
+                        <option value="vendeur">Vendeur</option>
+                        <option value="acheteur">Acheteur</option>
+                        <option value="vendeur/acheteur">Vendeur/Acheteur</option>
+                    </select>
                 </label>
             </fieldset>
             <fieldset class="formulaire second">
+                <label for="description">Donnez nous une petite description de vous:</label>
                 <textarea name="description" id="description" cols="30" rows="10"
                     placeholder="descritpion optionel de vous, peut etre modifier plus tard"></textarea><br>
                 <input type="checkbox" name="condition" id="condition" /> en cochant vous acceptez <a href="#">les

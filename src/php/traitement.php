@@ -1,15 +1,18 @@
 <?php 
 
-//DELETE FROM users WHERE user_pseudo = 'RayZiaX'
+#Code réaliser par Magne Jéremy pour le projet-UF 2019-2020 pour Ynov Campus
+
 session_start();
 $utilisateur = 'root';
 $mdp = '';
 try{
-    $cnx = new PDO('mysql:host=localhost;dbname=stephiplace_data_2;port=3308',$utilisateur,$mdp);
+    $cnx = new PDO('mysql:host=localhost;dbname=stephiplace_data;port=3308',$utilisateur,$mdp);
 }catch(Exception $e) {
     print($e->getMessage());
     exit;
 }
+
+######################## Cette fonction permet de récupérer les agences contennu dans la base de donnée et les mettrent dans une tableau ##################
 
 function getAgences($cnx){ // récupération de toutes les agences pour les afficher sur le site
     $tab = [];
@@ -21,6 +24,10 @@ function getAgences($cnx){ // récupération de toutes les agences pour les affi
     }
     return $tab;
 }
+
+##########################################################################################################################################################
+
+################################## Cette fonction permet d'afficher toutes les agences contenue dans le tableau ############################
 
 function getAgence($tab){ 
     $tabAgence = [];
@@ -37,6 +44,10 @@ function getAgence($tab){
     return $tabAgence;
 }
 
+#############################################################################################################################################
+
+
+############################################ Cette fonction permet d'afficher le menu dans chaque  ###########################################
 
 function getMenus(){ // permet d'afficher le menus sur toutes les pages du site en fonction de la connexion ou non
     if (empty($_SESSION['userName']) || $_SESSION['userName'] === null){
@@ -106,6 +117,10 @@ function getMenus(){ // permet d'afficher le menus sur toutes les pages du site 
     return $menus;
 }
 
+#############################################################################################################################################
+
+#################################### Elle permet a un visiteur de s'inscrire sur le site ###########################################
+
 if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la base de donnée
     $mdp = $_POST['mdp'];
     $mdpConfirm = $_POST['confirm_mdp'];
@@ -121,6 +136,7 @@ if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la
     $codePostal = $_POST['codePostal'];
     $description = $_POST['description'];
     $status = $_POST['status'];
+    $statusClient = $_POST['statusClient'];
     if(empty($image) && $mdp === $mdpConfirm && !empty($_POST['identifiant']) && !empty($_POST['mdp']) && !empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['age']) && !empty($_POST['condition']) || $_POST['condition'] === 'on'){
         $img = "/img/default_user.png";
         $password = password_hash($mdp,PASSWORD_DEFAULT);
@@ -142,6 +158,26 @@ if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la
         $stmt->bindParam(':description',$description,PDO::PARAM_STR);
         $stmt->bindParam(':status',$status,PDO::PARAM_STR);
         $stmt->execute();
+
+        $rqt2 = "SELECT utilisateurs_id FROM utilisateurs WHERE (utilisateur_nom = :userName) AND (utilisateur_prenom = :firstName)";
+        $stmt2 = $cnx->prepare($rqt2);
+        $stmt2->bindParam(':userName',$nom,PDO::PARAM_STR);
+        $stmt2->bindParam(':firstName',$prenom,PDO::PARAM_STR);
+        $stmt2->execute();
+        $tabID = [];
+        while($lineId = $stmt2->fetch(PDO::FETCH_ASSOC)){
+            array_push($tabID, $lineId);
+        }
+        for ($i=0; $i < count($tabID); $i++) { 
+            $parts = $tabID[$i];
+            $idUtilisateur = $parts['utilisateurs_id'];
+            $rqt3="INSERT INTO client (utilisateurs_id, client_status) VALUES (:idUtilisateur, :statusClient)";
+            $stmt3 = $cnx->prepare($rqt3);
+            $stmt3->bindParam(':idUtilisateur',$idUtilisateur,PDO::PARAM_INT);
+            $stmt3->bindParam(':statusClient',$statusClient,PDO::PARAM_STR);
+            $stmt3->execute();
+        }
+
         echo "<p>vos données on été enregistrer</p>";
         header('Refresh: 2, url=../index.php');
     }elseif($mdp === $mdpConfirm && !empty($_POST['identifiant']) && !empty($_POST['mdp']) && !empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['age']) && !empty($image) &&!empty($_POST['condition']) || $_POST['condition'] === 'on'){
@@ -149,7 +185,7 @@ if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la
         $img = "/img/".$image;
         $rqt = "INSERT INTO utilisateurs 
         (utilisateur_nom, utilisateur_prenom, utilisateur_mdp, utilisateur_mail, utilisateur_tel, utilisateur_genre, utilisateur_img, utilisateur_status, utilisateur_adresse, utilisateur_ville, utilisateur_codePostal, utilisateur_age, utilisateur_description )
-        VALUE (:userName, :firstName,:password,:mail, :tel, :genre, :img, :status, :adress, :city, :cityCode,:age, :description)";
+        VALUES (:userName, :firstName,:password,:mail, :tel, :genre, :img, :status, :adress, :city, :cityCode,:age, :description)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':userName',$nom,PDO::PARAM_STR);
         $stmt->bindParam(':firstName',$prenom,PDO::PARAM_STR);
@@ -166,6 +202,26 @@ if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la
         $stmt->bindParam(':description',$description,PDO::PARAM_STR);
         $stmt->bindParam(':status',$status,PDO::PARAM_STR);
         $stmt->execute();
+
+        $rqt2 = "SELECT utilisateurs_id FROM utilisateurs WHERE (utilisateur_nom = :userName) AND (utilisateur_prenom = :firstName)";
+        $stmt2 = $cnx->prepare($rqt2);
+        $stmt2->bindParam(':userName',$nom,PDO::PARAM_STR);
+        $stmt2->bindParam(':firstName',$prenom,PDO::PARAM_STR);
+        $stmt2->execute();
+        $tabID = [];
+        while($lineId = $stmt2->fetch(PDO::FETCH_ASSOC)){
+            array_push($tabID, $lineId);
+        }
+        for ($i=0; $i < count($tabID); $i++) { 
+            $parts = $tabID[$i];
+            $idUtilisateur = $parts['utilisateurs_id'];
+            $rqt3="INSERT INTO client (utilisateurs_id, client_status) VALUES (:idUtilisateur, :statusClient)";
+            $stmt3 = $cnx->prepare($rqt3);
+            $stmt3->bindParam(':idUtilisateur',$idUtilisateur,PDO::PARAM_INT);
+            $stmt3->bindParam(':statusClient',$statusClient,PDO::PARAM_STR);
+            $stmt3->execute();
+        }
+
         echo "<p>vos données on été enregistrer</p>";
         header('Refresh: 2, url=../index.php');
     }else{
@@ -174,11 +230,13 @@ if(!empty($_POST['inscription'])){ // permet a un visteur de s'enregister sur la
     }
 }
 
+####################################################################################################################################
 
+################ Permet a un utilisateur de se connecter sur le site internet et de gérer son compte ###############################
 if (!empty($_POST['connexion'])) { //permet a un utilisateur de se connecter au site
     $utilisateur = $_POST['user'];
     $passwd = $_POST['password'];
-    $rqt = "SELECT * FROM utilisateurs WHERE utilisateur_mail = :utilisateur";
+    $rqt = "SELECT * FROM utilisateurs AS u INNER JOIN client AS c WHERE (u.utilisateur_mail = :utilisateur) AND (u.utilisateur_status = 'client') AND (u.utilisateurs_id = c.utilisateurs_id)";
     $stmt = $cnx->prepare($rqt);
     $stmt->bindParam(':utilisateur',$utilisateur, PDO::PARAM_STR);
     $stmt->execute();
@@ -186,6 +244,7 @@ if (!empty($_POST['connexion'])) { //permet a un utilisateur de se connecter au 
     if(password_verify($passwd, $data['utilisateur_mdp'])){
         $_SESSION['userName'] = $data['utilisateur_prenom'];
         $_SESSION['img_profil'] = $data['utilisateur_img'];
+        $_SESSION['clientID'] = $data['client_id'];
         echo "<p>Vous etes bien connecter ".$_SESSION['userName']."</p>";
         header('Refresh: 3; url=../index.php');
     }else{
@@ -194,20 +253,25 @@ if (!empty($_POST['connexion'])) { //permet a un utilisateur de se connecter au 
     }
 }
 
+####################################################################################################################################
 
+######################### Création des coockies pour la recherche de biens #########################################################
 
-if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){ // création des cookies lors pour crée la recherche
+if(!empty($_GET['envoi']) && $_GET['envoi'] === 'recherche'){ // création des cookies pour crée la recherche
     setcookie("recherche[budgetmin]",$_GET['budgetmin'],time()+30,"/");
     setcookie("recherche[budgetmax]",$_GET['budgetmax'],time()+30,"/");
     setcookie("recherche[surfacemin]",$_GET['surfacemin'],time()+30,"/");
     setcookie("recherche[surfacemax]",$_GET['surfacemax'],time()+30,"/");
     setcookie("recherche[pieces]",$_GET['pieces'],time()+30,"/");
     setcookie("recherche[lieux]",$_GET['lieux'],time()+30,"/");
+    setcookie("recherche[type]",$_GET['typeB'],time()+30,"/");
     echo "Vous allez etres redirigez";
     header('Refresh: 2; url=../annonces.php');
 }
 
+#######################################################################################################################################
 
+##################### Fonction qui permet d'afficher les annonces en fonction d'une recherche ou non ##################################
 
 function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherche ou non
     if(!empty($_COOKIE['recherche'])){
@@ -220,15 +284,22 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
         $budgetMax = $array[1];
         $surfaceMin = $array[2];
         $surfaceMax = $array[3];
-        // $piece = $array[4];
-        $lieux = $array[4];
-        $rqt = "SELECT bien_img,bien_surface,bien_prix,bien_description,bien_adresse,bien_type,bien_id FROM bien WHERE (bien_prix BETWEEN :budgetmin AND :budgetmax) AND (bien_adresse = :ville) AND (bien_surface BETWEEN :surfacemin AND :surfacemax)";
+        $piece = $array[4];
+        $lieux = $array[5];
+        $type = $array[6];
+        $rqt = "SELECT bien_img,bien_surface,bien_prix,bien_description,bien_adresse,bien_type,bien_id FROM bien 
+        WHERE (bien_prix BETWEEN :budgetmin AND :budgetmax) 
+        AND (bien_ville = :ville) 
+        AND (bien_surface BETWEEN :surfacemin AND :surfacemax) 
+        AND (bien_type = :typeB) AND (bien_piece = :piece)";
         $stmt = $cnx->prepare($rqt);
         $stmt->bindParam(':budgetmin',$budgetMin,PDO::PARAM_INT);
         $stmt->bindParam(':budgetmax',$budgetMax,PDO::PARAM_INT);
         $stmt->bindParam(':ville',$lieux,PDO::PARAM_STR);
         $stmt->bindParam(':surfacemin',$surfaceMin,PDO::PARAM_INT);
         $stmt->bindParam(':surfacemax',$surfaceMax,PDO::PARAM_INT);
+        $stmt->bindParam(':typeB',$type,PDO::PARAM_STR);
+        $stmt->bindParam(':piece',$piece,PDO::PARAM_INT);
         $stmt->execute();
         $tab = [];
         while($line = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -243,7 +314,7 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
             $prix = $parts['bien_prix'];
             $surface = $parts['bien_surface'];
             $id = $parts['bien_id'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>Titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>Titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><button class='btn btn-hover' type='submit' value='$id' name='fav'>Favori</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
             array_push($tabBien,$affiche);
         }    
         return $tabBien;
@@ -266,13 +337,17 @@ function annonces($cnx){ //affiche toutes les annonces en fonction d'une recherc
             $prix = $parts['bien_prix'];
             $surface = $parts['bien_surface'];
             $id = $parts['bien_id'];
-            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>$titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
+            $affiche = "<div class='main'><div class='fond_img'><img src='.$img' alt='img_annonce'></div><div class='contener'><div class='corp'><div class='donnee'><span class='titre'>$titre</span></div><div class='reseau'></div><form action='./php/traitement.php' method='get'><button type='submit' name='description' class='btn-hover btn' value='$id'>Voir annonce</button><button class='btn btn-hover' type='submit' value='$id' name='fav'>Favori</button><input type='hidden' name='bien' value='bien'></form></div><div class='info'><span class='item'>Prix: $prix, Surface: $surface, localisation: $localisation, type de bien: $type</span></div><div><span class='titre'>Description</span><p>$description</p></div></div></div></div><br>";
             array_push($tabAffichage, $affiche);
         }
         return $tabAffichage;
     }
 }
 
+#######################################################################################################################################
+
+
+################### Création des cookies en fonction de ce que le client choisi (une agence ou alors un bien) #########################
 if(!empty($_GET['description']) && $_GET['bien'] === "bien"){
     setcookie("descriptionBien",$_GET['description'],time()+30,"/");
     header('Location: ../description.php');
@@ -281,6 +356,7 @@ if(!empty($_GET['description']) && $_GET['bien'] === "bien"){
     header('Location: ../description.php');
 }
 
+########################################################################################################################################
 
 function getDescription($cnx){
     if(!empty($_COOKIE['descriptionBien'])){
@@ -368,6 +444,9 @@ function getDescription($cnx){
     }
 }
 
+
+############# Fonction qui permet d'afficher les infos et les formulaires en fonction de ce que l'on modifie ##########################
+
 function infoCompte($cnx){
     $data = [];
     $rqt = "SELECT * FROM utilisateurs WHERE utilisateur_prenom = :pseudo";
@@ -451,6 +530,10 @@ function infoCompte($cnx){
     }
 }
 
+########################################################################################################################################
+
+######################## Fonction qui permet de déterminer quel donnée du compte doit être modifier ####################################
+
 function ModifInfo($cnx){
     if(!empty($_POST['modifier'])){
         switch ($_POST['info']) {
@@ -528,5 +611,16 @@ function ModifInfo($cnx){
 if (!empty($_POST['modifier'])) {
     ModifInfo($cnx);
     header('Location: ../profil.php');
+}
+########################################################################################################################################
+
+if (!empty($_GET['fav']) && (!empty($_SESSION['userName']))){
+    $rqt="INSERT INTO preferer (bien_id, client_id) VALUES (:idBien, :idClient)";
+    $stmt = $cnx->prepare($rqt);
+    $stmt->bindParam(':idClient',$_SESSION['clientID'],PDO::PARAM_INT);
+    $stmt->bindParam(':idBien',$_GET['fav'],PDO::PARAM_INT);
+    $stmt->execute();
+    echo "Votre annonce a été mis en favori";
+    header('Refresh: 2; url=../annonces.php');
 }
 ?>

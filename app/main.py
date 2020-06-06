@@ -1,4 +1,9 @@
+#coding:utf-8
+
+#Code réaliser par Magne Jéremy pour le projet-UF 2019-2020 pour Ynov Campus
+
 import tkinter as tk
+import tkinter.ttk as ttk
 # import fonctionSQL as fn
 import hashlib
 import mysql.connector
@@ -7,7 +12,7 @@ if __name__=='__main__':
 
 
     global win2, connec, bdd, utilisateur, id_utilisateur
-    bdd = mysql.connector.connect(host="localhost",port=3308,user="root",passwd="",database="stephiplace_data_2")
+    bdd = mysql.connector.connect(host="localhost",port=3308,user="root",passwd="",database="stephiplace_data")
     connec = False
     utilisateur = None
     id_utilisateur=None
@@ -32,7 +37,7 @@ if __name__=='__main__':
     ###############################################################
     def fenetreConnexion():
         global win2,entreIdentifiant,entreMDP
-        win2 = tk.Toplevel(winMain)
+        win2 = tk.Toplevel(winMain,bg="#F1F1F1")
         win2.title("Stephiplace - Connexion")
         identifiant = tk.Label(win2, text="Identifiant")
         entreIdentifiant = tk.Entry(win2, width=30)
@@ -62,26 +67,27 @@ if __name__=='__main__':
     ###############################################################
     def fenetreMenu():
         # winMenu = tk.Frame(winMain,width=800, height=700)
-        global listeAnnonce, utilisateur,listeAgent
+        global listeAnnonce, utilisateur,listeAgent, frameMenu
         menubar = tk.Menu(winMain) 
-        winAnnonce = tk.Label(winMain)
-        winAgent = tk.Label(winMain)
+        frameMenu = tk.Frame(winMain,bg="#F1F1F1")
+        winAnnonce = tk.Label(frameMenu)
+        winAgent = tk.Label(frameMenu)
         winMain.config(menu=menubar)
         menuCommand = tk.Menu(menubar,tearoff=0)
         menubar.add_cascade(label="Action", menu=menuCommand)
-        menuCommand.add_command(label="Rafraichir", command=winAnnonce.update)
+        menuCommand.add_command(label="Ajouter", command=fenetreAjouter)
         menuCommand.add_command(label="register", command=fenetreEntregistrer)
         menuCommand.add_separator()
         menuCommand.add_command(label="Quitter", command=winMain.destroy)
-        nomUtilisateur = tk.Label(winMain,text="Bonjours "+utilisateur)
-        listeAnnonce = tk.Listbox(winAnnonce,width=65)
-        listeAgent = tk.Listbox(winAgent,width=80)
-        btnAjouterAgent=tk.Button(winAgent,text="Ajouter", command=fenetreEntregistrer)
-        btnModifAgent=tk.Button(winAgent,text="Modifier", command=None)
-        btnDeleteAgent=tk.Button(winAgent,text="Supprimer", command=suppAgent)
-        btnAjouterAnnonce=tk.Button(winAnnonce,text="Ajouter", command=fenetreAjouter)
-        btnModifAnnonce=tk.Button(winAnnonce,text="Modifier", command=modifAnnonce)
-        btnDeleteAnnonce=tk.Button(winAnnonce,text="Supprimer", command=suppAnnonce)
+        nomUtilisateur = tk.Label(frameMenu,text="Bonjours "+utilisateur)
+        listeAnnonce = tk.Listbox(winAnnonce,width=65,selectbackground='#CE117B',highlightbackground ='#F1F1F1')
+        listeAgent = tk.Listbox(winAgent,width=80,selectbackground='#CE117B',highlightbackground ='#F1F1F1')
+        btnAjouterAgent=tk.Button(winAgent,text="Ajouter",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=fenetreEntregistrer)
+        btnModifAgent=tk.Button(winAgent,text="Modifier",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=None)
+        btnDeleteAgent=tk.Button(winAgent,text="Supprimer",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=suppAgent)
+        btnAjouterAnnonce=tk.Button(winAnnonce,text="Ajouter",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=fenetreAjouter)
+        btnModifAnnonce=tk.Button(winAnnonce,text="Modifier",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=modifAnnonce)
+        btnDeleteAnnonce=tk.Button(winAnnonce,text="Supprimer",bg='#CE117B',fg='#fff', activeforeground='#CE117B',width=17, command=suppAnnonce)
         myCursor = bdd.cursor()
         myCursor.execute("""SELECT bien_id,bien_nom,bien_ville,bien_codePostal,bien_type FROM bien""")
         lines = myCursor.fetchall()
@@ -92,6 +98,7 @@ if __name__=='__main__':
         linesAgent = myAgent.fetchall()
         for agent in linesAgent:
             listeAgent.insert(tk.END, "{} {} {} {} {} {}".format(agent[0],agent[1],agent[2],agent[3],agent[4], agent[5]))
+        frameMenu.pack(fill=tk.BOTH)
         winAgent.grid(row=1, column=2)
         listeAgent.grid(row=0,column=0,columnspan=3)
         btnAjouterAgent.grid(row=1,column=0)
@@ -143,13 +150,13 @@ if __name__=='__main__':
         labelGenre=tk.Label(winregister, text="Civilité: ")
         entreGenre=tk.Entry(winregister)
         LabelAgence = tk.Label(winregister, text="Agence associer au bien")
-        listeAgence = tk.Listbox(winregister, width=45, height=5)
+        listeAgence = tk.Listbox(winregister, width=45, height=5,selectbackground='#CE117B',highlightbackground ='#F1F1F1')
         myCursor = bdd.cursor()
         myCursor.execute("""SELECT agence_id, agence_nom, agence_codePostal FROM agence""")
         lines = myCursor.fetchall()
         for line in lines:
             listeAgence.insert(tk.END, "{} {} {},{}".format(line[0],"Agence de",line[1],line[2]))
-        btnConfirm = tk.Button(winregister, text="Confimer",bg='#CE117B',command=enregister)
+        btnConfirm = tk.Button(winregister, text="Confimer",bg='#CE117B',fg='#fff', activeforeground='#CE117B',command=enregister)
         labelName.grid(row=0,column=0)
         entreName.grid(row=0,column=1)
         LabelAgence.grid(row=0,column=5)
@@ -190,6 +197,7 @@ if __name__=='__main__':
         global bdd,entreTitre,entreAdresse,entreCodePostal,entreVille,entreSurface,entreDescription,labelType,entreType,var1,var2,var3,var4,var5,entreType,entrePiece,listeClient,entreImg,entrePrix,fenAjout
         fenAjout = tk.Toplevel(winMain)
         fenAjout.title('Ajouter annonce')
+        valeurTypes = ["Maison","Appartement","Studio"]
         labelTitre = tk.Label(fenAjout,text="Titre annonce")
         entreTitre = tk.Entry(fenAjout)        
         labelAdresse = tk.Label(fenAjout,text="Adresse annonce")
@@ -209,11 +217,11 @@ if __name__=='__main__':
         labelIndicationSurface = tk.Label(fenAjout, text="m²")
         labelDescription = tk.Label(fenAjout,text="Description")
         entreDescription = tk.Entry(fenAjout)
-        btnConfirm = tk.Button(fenAjout, text="Confimer", command=ajouterAnnonce)
+        btnConfirm = tk.Button(fenAjout, text="Confimer", bg='#CE117B',fg='#fff', activeforeground='#CE117B',command=ajouterAnnonce)
         labelType = tk.Label(fenAjout, text="Type de bien: ")
-        entreType = tk.Entry(fenAjout)
+        entreType = ttk.Combobox(fenAjout, value=valeurTypes)
         LabelClient = tk.Label(fenAjout, text="Client associer au bien")
-        listeClient = tk.Listbox(fenAjout, width=45, height=5)
+        listeClient = tk.Listbox(fenAjout, width=45, height=5,selectbackground='#CE117B',highlightbackground ='#F1F1F1')
         tabId = []
         tabNomDep = []
         cadreDependance = tk.Frame(fenAjout)
@@ -348,21 +356,21 @@ if __name__=='__main__':
         entreAffichage.grid(row=9,column=1)
         labelType.grid(row=10,column=0)
         entreType.grid(row=10,column=1)
-        tk.Button(fenModifAnnonce, text="Modifier", command=changeAnnonce).grid(row=11,column=0)
+        tk.Button(fenModifAnnonce, text="Modifier", bg='#CE117B',fg='#fff', activeforeground='#CE117B',command=changeAnnonce).grid(row=11,column=0)
 
 
 
     def fenetreIndication(): #Cette fenêtre apparait quand une donnée est entrée elle est appelée lors des modifications et ajout d'agent et annonce
         fenIndic = tk.Toplevel(winMain)
         labelIndic = tk.Label(fenIndic, text="Information entrée")
-        btnClose = tk.Button(fenIndic, text="Ok", command=fenIndic.destroy)
+        btnClose = tk.Button(fenIndic, text="Ok", bg='#CE117B',fg='#fff', activeforeground='#CE117B',command=fenIndic.destroy)
         labelIndic.pack()
         btnClose.pack()
 
     def indicDelete(): # Cette fenêtre apparait quand une donnée est supprimer elle est appelée lors que un agent est supprimer ou une annonce
         winDelete = tk.Toplevel(winMain)
         labelIndic = tk.Label(winDelete, text="Les données on été supprimer ")
-        btnClose=tk.Button(winDelete, text="Confirmer", command=winDelete.destroy)
+        btnClose=tk.Button(winDelete, text="Confirmer", bg='#CE117B',fg='#fff', activeforeground='#CE117B',command=winDelete.destroy)
         labelIndic.pack()
         btnClose.pack()
 
@@ -375,21 +383,37 @@ if __name__=='__main__':
         identifiant = entreIdentifiant.get() #On récupère les valeurs de l'input en question
         mdp = entreMDP.get() #On récupère les valeurs de l'input en question
         identifiantEncode = identifiant.encode('utf-8')
+        identifiantAdmin = "admin"
+        mdpAdmin = "root"
+        mdpAdminEncode = mdpAdmin.encode('utf-8')
+        mdpAdminChiffre = hashlib.sha1(mdpAdminEncode).hexdigest()
         mdpEncode = mdp.encode('utf-8')
         mdpChiffre = hashlib.sha1(mdpEncode).hexdigest()
-        myCursor = bdd.cursor() #On récupère les données associer au mail renseigner dans le premier champ
-        myCursor.execute("""SELECT u.utilisateurs_id, u.utilisateur_nom, u.utilisateur_mail, u.utilisateur_mdp, u.utilisateur_status, a.agent_id FROM utilisateurs AS u INNER JOIN agent AS a WHERE (utilisateur_mail = %s) AND (u.utilisateurs_id = a.utilisateurs_id)""",(identifiant, ))
-        lines = myCursor.fetchall()
-        for line in lines:
-            if line[3] == mdpChiffre: # La condition qui vérifie le mot de passe entrer avec celui de la base de donnée
-                win2.destroy() #Détruit la fenetre de connexion
-                winMain.deiconify() # Affiche la fenetre principale
-                utilisateur = line[1] # On récupère le nom de l'agent
-                id_utilisateur = line[5] # On récupère l'identifiant de l'agent
-                connec = True #on passe le status de connexion en true pour afficher le menu de l'application
-                status() # Appel la fonction de status de l'application
-            else:
-                print("Erreur je te connais pas")
+        statusUser = "agent"
+        cursorVerif = bdd.cursor()
+        cursorVerif.execute("""SELECT * FROM utilisateurs WHERE utilisateur_status = %s""",(statusUser, ))
+        verif = cursorVerif.fetchall()
+        if not verif:
+            if identifiant == identifiantAdmin and mdpChiffre == mdpAdminChiffre:
+                    win2.destroy() #Détruit la fenetre de connexion
+                    winMain.deiconify() # Affiche la fenetre principale
+                    utilisateur = identifiantAdmin # On récupère le nom de l'agent
+                    connec = True #on passe le status de connexion en true pour afficher le menu de l'application
+                    status() # Appel la fonction de status de l'application
+        else:
+            myCursor = bdd.cursor() #On récupère les données associer au mail renseigner dans le premier champ
+            myCursor.execute("""SELECT u.utilisateurs_id, u.utilisateur_nom, u.utilisateur_mail, u.utilisateur_mdp, u.utilisateur_status, a.agent_id FROM utilisateurs AS u INNER JOIN agent AS a WHERE (utilisateur_mail = %s) AND (u.utilisateurs_id = a.utilisateurs_id)""",(identifiant, ))
+            lines = myCursor.fetchall()
+            for line in lines:
+                if line[3] == mdpChiffre: # La condition qui vérifie le mot de passe entrer avec celui de la base de donnée
+                    win2.destroy() #Détruit la fenetre de connexion
+                    winMain.deiconify() # Affiche la fenetre principale
+                    utilisateur = line[1] # On récupère le nom de l'agent
+                    id_utilisateur = line[5] # On récupère l'identifiant de l'agent
+                    connec = True #on passe le status de connexion en true pour afficher le menu de l'application
+                    status() # Appel la fonction de status de l'application
+                else:
+                    print("Erreur je te connais pas")
 
     def quitter(): #Lorsque cette fonction est appelée, le détruit la fenetre de connexion ainsi que la fenêtre principale
         global win2
@@ -479,7 +503,7 @@ if __name__=='__main__':
 
 
     def ajouterAnnonce():
-        global bdd,entreTitre,entreAdresse,entreCodePostal,entreVille,entreSurface,entreDescription,checkDep1,checkDep2,checkDep3,checkDep4,checkDep5,entrePrix,entreImg,id_utilisateur,entreType,entrePiece,listeClient,fenAjout
+        global bdd,entreTitre,entreAdresse,entreCodePostal,entreVille,entreSurface,entreDescription,checkDep1,checkDep2,checkDep3,checkDep4,checkDep5,entrePrix,entreImg,id_utilisateur,entreType,entrePiece,listeClient,fenAjout,fenetreMenu
         titre = entreTitre.get()
         img = entreImg.get()
         adresse = entreAdresse.get()
@@ -677,6 +701,7 @@ if __name__=='__main__':
             myCursorDepend.executemany(req,val)
             bdd.commit()
         fenetreIndication()
+        # fenetreMenu.update()
         fenAjout.destroy()
         
 
