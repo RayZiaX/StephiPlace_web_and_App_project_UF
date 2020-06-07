@@ -5,7 +5,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./css/styleMain.css"/>
     <link rel="stylesheet" href="./css/styleMenu.css">
     <link rel="stylesheet" href="./css/styleAsset.css">
+    <link rel="stylesheet" href="./css/styleDescription.css">
     <title>StephiPlace - Description</title>
 </head>
 

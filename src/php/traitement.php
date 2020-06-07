@@ -377,20 +377,21 @@ function getDescription($cnx){
             $surface = $parts['bien_surface'];
             $img = $parts['bien_img'];
             $ville = $parts['bien_adresse'];
-            // $agence = $parts['agence_id'];
+            $agent = $parts['agent_id'];
+            $proprio =$parts['client_id'];
             $prix = $parts['bien_prix'];
             $page = <<<html
-            <div class="body">
-            <div>
-            <div class="contenu-img">
+            <div class="main">
+            <div class='description-content'>
+            <div class="contener-img">
                 <img src=".$img" alt="img_bien">
-                <img src=".$img" alt="img_bien">
-                <img src=".$img" alt="img_bien">
-                <img src=".$img" alt="img_bien">
+                <img src=".$img" alt="img_bien" class='img-second'>
+                <img src=".$img" alt="img_bien" class='img-second'>
+                <img src=".$img" alt="img_bien" class='img-second'>
             </div>
-            <div>
-                <a href="#">Contact agence</a>
-                <a href="#">Contact client</a>
+            <div class='description-btn'>
+                <a href="#" class='btn btn-hover' id='btn' value='$agent'>Contacter agent</a>
+                <a href="#" class='btn btn-hover' value='$proprio'>Contacter client</a>
             </div>
             </div>
             <div class="information">
@@ -423,19 +424,18 @@ function getDescription($cnx){
             $ville = $parts['agence_ville'];
             $codePostal = $parts['agence_codePostal'];
             $page = <<<html
-            <div class="body">
-            <div>
-            <div class="contenu-img">
+            <div class="main">
+            <div class="description-content">
+            <div class="contener-img">
                 <img src=".$img" alt="img_bien">
             </div>
-            <div>
-                <a href="#">Contact agence</a>
-                <a href="#">Voir annonces</a>
+            <div class="description-btn">
+                <a href="#" class="btn btn-hover" id="btn">Contact agence</a>
+                <a href="#" class="btn btn-hover">Voir annonces</a>
             </div>
-            </div>
+            </div class='description-btn'>
             <div class="information">
                 <span>localisation: $localisation,$codePostal $ville</span><br>
-                <p>Description: </p>
             </div>
             </div>
             html;
